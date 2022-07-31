@@ -1,0 +1,466 @@
+\documentclass[12pt, a3paper, landscape]{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[]{amsmath}
+\usepackage[]{amsfonts}
+\usepackage[]{amssymb}
+    \everymath{\displaystyle}
+%% Utilisation du paquet pour conditionner l'affichage des informations.
+%% Vont être définies plusieurs variables booléennes ne pouvant prendre 
+%% que des valeurs True ou False (casse à respecter)
+%% Chaque nom de variable booléenne prend en charge l'affichage d'informations
+%% différentes et au besoin le chargement d'un fichier extérieur pour des 
+%% compléments informatifs. Le nom de chaque variable a été choisi de
+%% façon humainement compréhensible et claire.
+%% 
+%% Par défaut toutes les variables sont à false, le tableau est donc 
+%% sur fond transparent et n'affiche que le symbole, le numéro atomique
+%% et le nom de l'élément.
+%% 
+%% Les positions des informations à ajouter sont calculées en tenant
+%% compte des autres informations.
+\usepackage{ifthen}
+% Définition des variables
+	\newboolean{AfficherConfigOrbitales}
+	\newboolean{AfficherCouleurElement}
+	\newboolean{AfficherCouleurFamille}
+	\newboolean{AfficherElectronegativite}
+	\newboolean{AfficherMasseMolaire}
+% Affectation d'une valeur à chaque variable
+	% Afficher les configuration en ortibales atomiques ?
+	\setboolean{AfficherConfigOrbitales}{True}
+	% Afficher la couleur de l'élément selon la norme fixée par l'UICPA ?
+	\setboolean{AfficherCouleurElement}{False} % prendra le pas sur la couleurs des familles si les deux valeurs sont à True
+	% Afficher la couleur de la famille d'éléments ? (les couleurs sont arbritraires)
+	\setboolean{AfficherCouleurFamille}{True}
+	% Afficher l'électronégativité selon l'échelle de Pauling ?
+	\setboolean{AfficherElectronegativite}{True}
+	% Afficher la masse molaire atomique en g/mol ?
+	\setboolean{AfficherMasseMolaire}{True}
+
+\usepackage[]{lmodern}
+\usepackage[]{graphicx}
+\usepackage[left=10mm, right=10mm, top=15mm, bottom=15mm]{geometry}
+
+\usepackage{xcolor}
+%% Définition de toutes les couleurs de chaque élément chimique
+%% utilisé dans le tableau avec le champ \coulelement
+%% La nomenclature est du style coulSymbole, par exemple pour l'élément
+%% cuivre (Cu) : coulCu, pour l'iode (I) : coulI
+%% Ces couleurs suivent la norme établie par l'UICPA.
+	\definecolor{coulH}{HTML}{FFFFFF}
+	\definecolor{coulHe}{HTML}{D8FFFF}
+	\definecolor{coulLi}{HTML}{CC7FFF}
+	\definecolor{coulBe}{HTML}{C1FF00}
+	\definecolor{coulB}{HTML}{FFB5B5}
+	\definecolor{coulC}{HTML}{7F7F7F}
+	\definecolor{coulN}{HTML}{0C0CFF}
+	\definecolor{coulO}{HTML}{FF0C0C}
+	\definecolor{coulF}{HTML}{B2FFFF}
+	\definecolor{coulNe}{HTML}{B2E2F4}
+	\definecolor{coulNa}{HTML}{AA5BF2}
+	\definecolor{coulMg}{HTML}{89FF00}
+	\definecolor{coulAl}{HTML}{BFA5A5}
+	\definecolor{coulSi}{HTML}{7F9999}
+	\definecolor{coulP}{HTML}{FF7F00}
+	\definecolor{coulS}{HTML}{FFFF30}
+	\definecolor{coulCl}{HTML}{1EEF1E}
+	\definecolor{coulAr}{HTML}{7FD1E2}
+	\definecolor{coulK}{HTML}{8E3FD3}
+	\definecolor{coulCa}{HTML}{3DFF00}
+	\definecolor{coulSc}{HTML}{E5E5E5}
+	\definecolor{coulTi}{HTML}{BFC1C6}
+	\definecolor{coulV}{HTML}{A5A5AA}
+	\definecolor{coulCr}{HTML}{8999C6}
+	\definecolor{coulMn}{HTML}{9B7AC6}
+	\definecolor{coulFe}{HTML}{7F7AC6}
+	\definecolor{coulCo}{HTML}{707AC6}
+	\definecolor{coulNi}{HTML}{5B7AC1}
+	\definecolor{coulCu}{HTML}{FF7A60}
+	\definecolor{coulZn}{HTML}{7C7FAF}
+	\definecolor{coulGa}{HTML}{C18E8E}
+	\definecolor{coulGe}{HTML}{668E8E}
+	\definecolor{coulAs}{HTML}{BC7FE2}
+	\definecolor{coulSe}{HTML}{FFA000}
+	\definecolor{coulBr}{HTML}{A52828}
+	\definecolor{coulKr}{HTML}{5BB7D1}
+	\definecolor{coulRb}{HTML}{702DAF}
+	\definecolor{coulSr}{HTML}{00FF00}
+	\definecolor{coulY}{HTML}{93FFFF}
+	\definecolor{coulZr}{HTML}{93E0E0}
+	\definecolor{coulNb}{HTML}{72C1C9}
+	\definecolor{coulMo}{HTML}{54B5B5}
+	\definecolor{coulTc}{HTML}{3A9E9E}
+	\definecolor{coulRu}{HTML}{238E8E}
+	\definecolor{coulRh}{HTML}{0A7C8C}
+	\definecolor{coulPd}{HTML}{006884}
+	\definecolor{coulAg}{HTML}{E0E0FF}
+	\definecolor{coulCd}{HTML}{FFD88E}
+	\definecolor{coulIn}{HTML}{A57572}
+	\definecolor{coulSn}{HTML}{667F7F}
+	\definecolor{coulSb}{HTML}{9E63B5}
+	\definecolor{coulTe}{HTML}{D37A00}
+	\definecolor{coulI}{HTML}{930093}
+	\definecolor{coulXe}{HTML}{429EAF}
+	\definecolor{coulCs}{HTML}{56168E}
+	\definecolor{coulBa}{HTML}{00C900}
+	\definecolor{coulLa}{HTML}{70D3FF}
+	\definecolor{coulCe}{HTML}{FFFFC6}
+	\definecolor{coulPr}{HTML}{D8FFC6}
+	\definecolor{coulNd}{HTML}{C6FFC6}
+	\definecolor{coulPm}{HTML}{3AFFC6}
+	\definecolor{coulSm}{HTML}{8EFFC6}
+	\definecolor{coulEu}{HTML}{60FFC6}
+	\definecolor{coulGd}{HTML}{44FFC6}
+	\definecolor{coulTb}{HTML}{30FFC6}
+	\definecolor{coulDy}{HTML}{1EFFC6}
+	\definecolor{coulHo}{HTML}{00FF9B}
+	\definecolor{coulEr}{HTML}{00E575}
+	\definecolor{coulTm}{HTML}{00D351}
+	\definecolor{coulYb}{HTML}{00BF38}
+	\definecolor{coulLu}{HTML}{00AA23}
+	\definecolor{coulHf}{HTML}{4CC1FF}
+	\definecolor{coulTa}{HTML}{4CA5FF}
+	\definecolor{coulW}{HTML}{2193D6}
+	\definecolor{coulRe}{HTML}{267CAA}
+	\definecolor{coulOs}{HTML}{266696}
+	\definecolor{coulIr}{HTML}{165487}
+	\definecolor{coulPt}{HTML}{F4EDD1}
+	\definecolor{coulAu}{HTML}{CCD11E}
+	\definecolor{coulHg}{HTML}{B5B5C1}
+	\definecolor{coulTl}{HTML}{A5544C}
+	\definecolor{coulPb}{HTML}{565960}
+	\definecolor{coulBi}{HTML}{9E4FB5}
+	\definecolor{coulPo}{HTML}{AA5B00}
+	\definecolor{coulAt}{HTML}{754F44}
+	\definecolor{coulRn}{HTML}{428296}
+	\definecolor{coulFr}{HTML}{420066}
+	\definecolor{coulRa}{HTML}{007C00}
+	\definecolor{coulAc}{HTML}{70AAF9}
+	\definecolor{coulTh}{HTML}{00BAFF}
+	\definecolor{coulPa}{HTML}{00A0FF}
+	\definecolor{coulU}{HTML}{008EFF}
+	\definecolor{coulNp}{HTML}{007FFF}
+	\definecolor{coulPu}{HTML}{006BFF}
+	\definecolor{coulAm}{HTML}{545BF2}
+	\definecolor{coulCm}{HTML}{775BE2}
+	\definecolor{coulBk}{HTML}{894FE2}
+	\definecolor{coulCf}{HTML}{A035D3}
+	\definecolor{coulEs}{HTML}{B21ED3}
+	\definecolor{coulFm}{HTML}{B21EBA}
+	\definecolor{coulMd}{HTML}{B20CA5}
+	\definecolor{coulNo}{HTML}{BC0C87}
+	\definecolor{coulLr}{HTML}{C60066}
+	\definecolor{coulRf}{HTML}{CC0059}
+	\definecolor{coulDb}{HTML}{D1004F}
+	\definecolor{coulSg}{HTML}{D80044}
+	\definecolor{coulBh}{HTML}{E00038}
+	\definecolor{coulHs}{HTML}{E5002D}
+	\definecolor{coulMt}{HTML}{EA0026}
+	\definecolor{coulDs}{HTML}{ED0023}
+	\definecolor{coulRg}{HTML}{EF0021}
+	\definecolor{coulCn}{HTML}{F2001E}
+	\definecolor{coulNh}{HTML}{F4001C}
+	\definecolor{coulFl}{HTML}{F70019}
+	\definecolor{coulMc}{HTML}{F90016}
+	\definecolor{coulLv}{HTML}{FC0014}
+	\definecolor{coulTs}{HTML}{FF0011}
+	\definecolor{coulOg}{HTML}{28667C}
+
+\usepackage[]{float}
+    \floatplacement{table}{H}
+    \floatplacement{figure}{H}
+\usepackage[]{tikz}
+
+\title{Tableau Périodique des Éléments}
+\date{}
+\author{F.S.G.}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\center {\LARGE Tableau périodique des éléments}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=1]
+%% grille de repérage avec carreaux de 0,5 cm, utile pour se repérer le cas échéant
+%		\draw[dotted, step=0.5] (-1,-5) grid (\linewidth,14.5) ;
+
+%% Tracé des cases en haut des colonnes avec le nombre romain correspondant
+%% au placement de la colonne (nouvelle numérotatin de I à XVIII).
+       \foreach \x/\numb in {%
+        0/I,%
+        2/II,%
+        4/III,%
+        6/IV,%
+        8/V,%
+        10/VI,%
+        12/VII,%
+        14/VIII,%
+        16/IX,%
+        18/X,%
+        20/XI,%
+        22/XII,%
+        24/XIII,%
+        26/XIV,%
+        28/XV,%
+        30/XVI,%
+        32/XVII,%
+        34/XVIII%
+        }{%
+            \draw[ultra thin, rounded corners] (\x,14) rectangle ++(2,1) node at (\x+1,14.5) {\bf \numb} ;
+        } ;
+
+%% Tracé des entêtes de lignes avec le numéro de la période en chiffres arabes
+	   \foreach \x/\y/\numbper in {%
+		-0.5/12/1,%
+		-0.5/10/2,%
+		-0.5/8/3,%
+		-0.5/6/4,%
+		-0.5/4/5,%
+		-0.5/2/6,%
+		-0.5/0/7,%
+		5.5/-3/6,% Ligne pour les Lathanoïdes (nomenclateur UICPA)
+		5.5/-5/7%  Ligne pour les Actinoïdes (nomenclature UICPA)
+		%
+	   }{%
+			\draw[ultra thin, rounded corners] (\x,\y) rectangle ++(0.5,2) ;
+			\node at (\x+0.25,\y+1) {\numbper}  ;
+	   } ;
+
+%% Tracé des cases avec les informations qui vons être sélectionnnées par les variables
+%% La centaine et quelque de lignes suivantes contient toutes les informations relatives aux données
+%% disponibles, s'assurer pour le champ \coulelement que le fichier defineelementscolors.tex est
+%% bien inclus dans les entêtes à la ligne suivant celle de l'inclusion du paquet xcolor.
+%%
+%% Note : pour les \ell pas besoin de les encadrer par les $ $ car ils 
+%% vont l'être dans le node !
+%% Aucun champ n'a besoin d'être passé en mode mathématique puisque c'est dans le node que cela est traité.
+%% les \relax qui apparaissent indique de ne rien faire (information vide)
+        \foreach \z/\symb/\nom/\masse/\x/\y/\champun/\champdeux/\champtrois/\champquatre/\champcinq/\famcoul/\elecnegpauling/\coulelement in {%
+		%% Insertion fichier contenant toutes les données.
+		%\input{elementsdatas.tex} ;
+        %% Définition de toutes les informations pour tous les éléments chimiques
+        %% Manipuler cette partie avec grand soin !
+			1/H/Hydrogène/{1,00}/0/12/1s^{1}/\relax/\relax/\relax/\relax/white!90!teal/{2,2}/coulH,%
+			2/He/Hélium/{4,00}/34/12/1s^{2.}/\relax/\relax/\relax/\relax/white!90!black/{\relax}/coulHe,%
+			3/Li/Lithium/{6,94}/0/10/[He]/2s^{1}/\relax/\relax/\relax/white!85!yellow/{0,98}/coulLi,%
+			4/Be/Béryllium/{9,01}/2/10/[He]/2s^{2}/\relax/\relax/\relax/white!90!green/{1,57}/coulBe,%
+			5/B/Bore/{10,81}/24/10/[He]/2s^{2}/2p^{1}/\relax/\relax/white!90!brown/{2,04}/coulB,%
+			6/C/Carbone/{12,01}/26/10/[He]/2s^{2}/2p^{2}/\relax/\relax/white!90!teal/{2,55}/coulC,%
+			7/N/Azote/{14,01}/28/10/[He]/2s^{2}/2p^{3}/\relax/\relax/white!90!teal/{3,04}/coulN,%
+			8/O/Oxygène/{16,00}/30/10/[He]/2s^{2}/2p^{4}/\relax/\relax/white!90!teal/{3,44}/coulO,%
+			9/F/Fluor/{19,00}/32/10/[He]/2s^{2}/2p^{5}/\relax/\relax/white!90!red/{3,98}/coulF,%
+			10/Ne/Néon/{20,18}/34/10/[He]/2s^{2}/2p^{6}/\relax/\relax/white!90!black/{\relax}/coulNe,%
+			11/Na/Sodium/{22,99}/0/8/[Ne]/3s^{1}/\relax/\relax/\relax/white!85!yellow/{0,93}/coulNa,%
+			12/Mg/Magnésium/{24,31}/2/8/[Ne]/3s^{2}/\relax/\relax/\relax/white!90!green/{1,31}/coulMg,%
+			13/A\ell{}/Aluminium/{26,98}/24/8/[Ne]/3s^{2}/3p^{1}/\relax/\relax/white!90!olive/{1,61}/coulAl,%
+			14/Si/Silicium/{28,09}/26/8/[Ne]/3s^{2}/3p^{2}/\relax/\relax/white!90!brown/{1,9}/coulSi,%
+			15/P/Phosphore/{30,97}/28/8/[Ne]/3s^{2}/3p^{3}/\relax/\relax/white!90!teal/{2,19}/coulP,%
+			16/S/Soufre/{32,07}/30/8/[Ne]/3s^{2}/3p^{4}/\relax/\relax/white!90!teal/{2,58}/coulS,%
+			17/C\ell/Chlore/{35,45}/32/8/[Ne]/3s^{2}/3p^{5}/\relax/\relax/white!90!red/{3,16}/coulCl,%
+			18/Ar/Argon/{39,95}/34/8/[Ne]/3s^{2}/3p^{6}/\relax/\relax/white!90!black/{\relax}/coulAr,%
+			19/K/Potassium/{39,10}/0/6/[Ar]/4s^{1}/\relax/\relax/\relax/white!85!yellow/{0,82}/coulK,%
+			20/Ca/Calcium/{40,08}/2/6/[Ar]/4s^{2}/\relax/\relax/\relax/white!90!green/{1}/coulCa,%
+			21/Sc/Scandium/{44,96}/4/6/[Ar]/4s^{2}/3d^{1}/\relax/\relax/white!90!orange/{1,36}/coulSc,%
+			22/Ti/Titane/{47,87}/6/6/[Ar]/4s^{2}/3d^{2}/\relax/\relax/white!90!orange/{1,54}/coulTi,%
+			23/V/Vanadium/{50,94}/8/6/[Ar]/4s^{2}/3d^{3}/\relax/\relax/white!90!orange/{1,63}/coulV,%
+			24/Cr/Chrome/{52,00}/10/6/[Ar]/4s^{2}/3d^{4}/\relax/\relax/white!90!orange/{1,66}/coulCr,%
+			25/Mn/Manganèse/{54,94}/12/6/[Ar]/4s^{2}/3d^{5}/\relax/\relax/white!90!orange/{1,55}/coulMn,%
+			26/Fe/Fer/{55,85}/14/6/[Ar]/s^{2}/3d^{6}/\relax/\relax/white!90!orange/{1,83}/coulFe,%
+			27/Co/Cobalt/{58,93}/16/6/[Ar]/4s^{2}/3d^{7}/\relax/\relax/white!90!orange/{1,88}/coulCo,%
+			28/Ni/Nickel/{58,69}/18/6/[Ar]/4s^{2}/3d^{8}/\relax/\relax/white!90!orange/{1,91}/coulNi,%
+			29/Cu/Cuivre/{63,55}/20/6/[Ar]/4s^{2}/3d^{9}/\relax/\relax/white!90!orange/{1,9}/coulCu,%
+			30/Zn/Zinc/{65,38}/22/6/[Ar]/4s^{2}/3d^{10}/\relax/\relax/white!90!olive/{1,65}/coulZn,%
+			31/Ga/Gallium/{69,72}/24/6/[Ar]/4s^{2}/3d^{10}/4p^{1}/\relax/white!90!olive/{1,81}/coulGa,%
+			32/Ge/Germanium/{72,64}/26/6/[Ar]/4s^{2}/3d^{10}/4p^{2}/\relax/white!90!brown/{2,01}/coulGe,%
+			33/As/Arsenic/{74,92}/28/6/[Ar]/4s^{2}/3d^{10}/4p^{3}/\relax/white!90!brown/{2,18}/coulAs,%
+			34/Se/Sélénium/{78,96}/30/6/[Ar]/4s^{2}/3d^{10}/4p^{4}/\relax/white!90!teal/{2,55}/coulSe,%
+			35/Br/Brome/{79,90}/32/6/[Ar]/4s^{2}/3d^{10}/4p^{5}/\relax/white!90!red/{2,96}/coulBr,%
+			36/Kr/Krypton/{83,80}/34/6/[Ar]/4s^{2}/3d^{10}/4p^{6}/\relax/white!90!black/{3}/coulKr,%
+			37/Rb/Rubidium/{85,47}/0/4/[Kr]/5s^{1}/\relax/\relax/\relax/white!85!yellow/{0,82}/coulRb,%
+			38/Sr/Strontium/{87,62}/2/4/[Kr]/5s^{2}/\relax/\relax/\relax/white!90!green/{0,95}/coulSr,%
+			39/Y/Yttrium/{88,91}/4/4/[Kr]/5s^{2}/4d^{1}/\relax/\relax/white!85!orange/{1,22}/coulY,%
+			40/Zr/Zirconium/{91,22}/6/4/[Kr]/5s^{2}/4d^{2}/\relax/\relax/white!85!orange/{1,33}/coulZr,%
+			41/Nb/Niobium/{92,91}/8/4/[Kr]/5s^{1}/4d^{4}/\relax/\relax/white!85!orange/{1,6}/coulNb,%
+			42/Mo/Molybdène/{95,96}/10/4/[Kr]/5s^{1}/4d^{5}/\relax/\relax/white!85!orange/{2,16}/coulMo,%
+			43/Tc/Technétium/{98}/12/4/[Kr]/5s^{1}/4d^{6}/\relax/\relax/white!85!orange/{1,9}/coulTc,%
+			44/Ru/Ruthénium/{101,07}/14/4/[Kr]/5s^{1}/4d^{7}/\relax/\relax/white!85!orange/{2,2}/coulRu,%
+			45/Rh/Rhodium/{102,91}/16/4/[Kr]/5s^{1}/4d^{8}/\relax/\relax/white!85!orange/{2,28}/coulRh,%
+			46/Pd/Palladium/{106,42}/18/4/[Kr]/\relax/4d^{10}/\relax/\relax/white!85!orange/{2,2}/coulPd,%
+			47/Ag/Argent/{107,87}/20/4/[Kr]/5s^{1}/4d^{10}/\relax/\relax/white!85!orange/{1,93}/coulAg,%
+			48/Cd/Cadmium/{112,41}/22/4/[Kr]/5s^{2}/4d^{10}/\relax/\relax/white!90!olive/{1,69}/coulCd,%
+			49/In/Indium/{114,82}/24/4/[Kr]/5s^{2}/4d^{10}/5p^{1}/\relax/white!90!olive/{1,78}/coulIn,%
+			50/Sn/Étain/{118,71}/26/4/[Kr]/5s^{2}/4d^{10}/5p^{2}/\relax/white!90!olive/{1,96}/coulSn,%
+			51/Sb/Antimoine/{121,76}/28/4/[Kr]/5s^{2}/4d^{10}/5p^{3}/\relax/white!90!brown/{2,05}/coulSb,%
+			52/Te/Tellure/{127,6}/30/4/[Kr]/5s^{2}/4d^{10}/5p^{4}/\relax/white!90!brown/{2,1}/coulTe,%
+			53/I/Iode/{126,90}/32/4/[Kr]/5s^{2}/4d^{10}/5p^{5}/\relax/white!90!red/{2,66}/coulI,%
+			54/Xe/Xénon/{131,29}/34/4/[Kr]/5s^{2}/4d^{10}/5p^{6}/\relax/white!90!black/{2,6}/coulXe,%
+			55/Cs/Césium/{132,91}/0/2/[Xe]/6s^{1}/\relax/\relax/\relax/white!85!yellow/{0,79}/coulCs,%
+			56/Ba/Baryum/{137,33}/2/2/[Xe]/6s^{2}/\relax/\relax/\relax/white!90!green/{0,89}/coulBa,%
+			57/La/Lanthane/{138,91}/4/2/[Xe]/6s^{2}/5d^{1}/\relax/\relax/white!90!purple/{1,1}/coulLa,%
+			% insertion lanthanides
+			58/Ce/Cérium/{140,12}/6/-3/[Xe]/6s^{2}/4f^{1}/5d^{1}/\relax/white!90!purple/{1,12}/coulCe,%
+			59/Pr/Praséodyme/{140,91}/8/-3/[Xe]/6s^{2}/4f^{3}/\relax/\relax/white!90!purple/{1,13}/coulPr,%
+			60/Nd/Néodyme/{144,24}/10/-3/[Xe]/6s^{2}/4f^{4}/\relax/\relax/white!90!purple/{1,14}/coulNd,%
+			61/Pm/Prométhéum/{145}/12/-3/[Xe]/6s^{2}/4f^{5}/\relax/\relax/white!90!purple/{\relax}/coulPm,%
+			62/Sm/Samarium/{150,36}/14/-3/[Xe]/6s^{2}/4f^{6}/\relax/\relax/white!90!purple/{1,17}/coulSm,%
+			63/Eu/Europium/{151,96}/16/-3/[Xe]/6s^{2}/4f^{7}/\relax/\relax/white!90!purple/{\relax}/coulEu,%
+			64/Gd/Gadolinium/{157,25}/18/-3/[Xe]/6s^{2}/4f^{7}/5d^{1}/\relax/white!90!purple/{1,2}/coulGd,%
+			65/Tb/Terbium/{158,93}/20/-3/[Xe]/6s^{2}/4f^{9}/\relax/\relax/white!90!purple/{\relax}/coulTb,%
+			66/Dy/Dysprosium/{162,5}/22/-3/[Xe]/6s^{2}/4f^{10}/\relax/\relax/white!90!purple/{1,22}/coulDy,%
+			67/Ho/Holmium/{164,93}/24/-3/[Xe]/6s^{2}/4f^{11}/\relax/\relax/white!90!purple/{1,23}/coulHo,%
+			68/Er/Erbium/{167,26}/26/-3/[Xe]/6s^{2}/4f^{12}/\relax/\relax/white!90!purple/{1,24}/coulEr,%
+			69/Tm/Thullium/{168,93}/28/-3/[Xe]/6s^{2}/4f^{13}/\relax/\relax/white!90!purple/{1,25}/coulTm,%
+			70/Yb/Ytterbium/{173,05}/30/-3/[Xe]/6s^{2}/4f^{14}/\relax/\relax/white!90!purple/{\relax}/coulYb,%
+			71/Lu/Lutécium/{174,97}/32/-3/[Xe]/6s^{2}/4f^{14}/5d^{1}/\relax/white!90!purple/{1,27}/coulLu,%
+			% fin insertion lanthanides
+			72/Hf/Hafnium/{178,49}/6/2/[Xe]/6s^{2}/4f^{14}/5d^{2}/\relax/white!80!orange/{1,3}/coulHf,%
+			73/Ta/Tantale/{180,95}/8/2/[Xe]/6s^{2}/4f^{14}/5d^{3}/\relax/white!80!orange/{1,5}/coulTa,%
+			74/W/Tungstène/{183,84}/10/2/[Xe]/6s^{2}/4f^{14}/5d^{4}/\relax/white!80!orange/{2,36}/coulW,%
+			75/Re/Rhénium/{186,21}/12/2/[Xe]/6s^{2}/4f^{14}/5d^{5}/\relax/white!80!orange/{1,9}/coulRe,%
+			76/Os/Osmium/{190,23}/14/2/[Xe]/6s^{2}/4f^{14}/5d^{6}/\relax/white!80!orange/{2,2}/coulOs,%
+			77/Ir/Iridium/{192,22}/16/2/[Xe]/6s^{2}/4f^{14}/5d^{7}/\relax/white!80!orange/{2,2}/coulIr,%
+			78/Pt/Platine/{195,08}/18/2/[Xe]/6s^{1}/4f^{14}/5d^{9}/\relax/white!80!orange/{2,28}/coulPt,%
+			79/Au/Or/{196,97}/20/2/[Xe]/6s^{1}/4f^{14}/5d^{10}/\relax/white!80!orange/{2,54}/coulAu,%
+			80/Hg/Mercure/{200,59}/22/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/\relax/white!90!olive/{2}/coulHg,%
+			81/Tl/Thallium/{204,38}/24/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/6p^{1}/white!90!olive/{1,62}/coulTl,%
+			82/Pb/Plomb/{207,2}/26/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/6p^{2}/white!90!olive/{2,33}/coulPb,%
+			83/Bi/Bismuth/{208,98}/28/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/6p^{3}/white!90!olive/{2,02}/coulBi,%
+			84/Po/Polonium/{209}/30/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/6p^{4}/white!90!olive/{2}/coulPo,%
+			85/At/Astate/{210}/32/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/6p^{5}/white!90!brown/{2,2}/coulAt,%
+			86/Rn/Radon/{222}/34/2/[Xe]/6s^{2}/4f^{14}/5d^{10}/6p^{6}/white!90!black/{\relax}/coulRn,%
+			87/Fr/Francium/{223}/0/0/[Rn]/7s^{1}/\relax/\relax/\relax/white!85!yellow/{0,7}/coulFr,%
+			88/Ra/Radium/{226}/2/0/[Rn]/7s^{2}/\relax/\relax/\relax/white!90!green/{0,9}/coulRa,%
+			89/Ac/Actinium/{227}/4/0/[Rn]/7s^{2}/6d^{1}/\relax/\relax/white!90!violet/{1,1}/coulAc,%
+			% insertion actinides
+			90/Th/Thorium/{232,04}/6/-5/[Rn]/7s^{2}/6d^{2}/\relax/\relax/white!90!violet/{1,3}/coulTh,%
+			91/Pa/Protactinium/{231,04}/8/-5/[Rn]/7s^{2}/6d^{1}/5f^{2}/\relax/white!90!violet/{1,5}/coulPa,%
+			92/U/Uranium/{238,03}/10/-5/[Rn]/7s^{2}/6d^{1}/5f^{3}/\relax/white!90!violet/{1,38}/coulU,%
+			93/Np/Neptunium/{237}/12/-5/[Rn]/7s^{2}/6d^{1}/5f^{4}/\relax/white!90!violet/{1,36}/coulNp,%
+			94/Pu/Plutonium/{244}/14/-5/[Rn]/7s^{2}/\relax/5f^{6}/\relax/white!90!violet/{1,28}/coulPu,%
+			95/Am/Américium/{243}/16/-5/[Rn]/7s^{2}/\relax/5f^{7}/\relax/white!90!violet/{1,3}/coulAm,%
+			96/Cm/Curium/{247}/18/-5/[Rn]/7s^{2}/6d^{1}/5f^{7}/\relax/white!90!violet/{1,3}/coulCm,%
+			97/Bk/Berkélium/{247}/20/-5/[Rn]/7s^{2}/\relax/5f^{9}/\relax/white!90!violet/{1,3}/coulBk,%
+			98/Cf/Californium/{251}/22/-5/[Rn]/7s^{2}/\relax/5f^{10}/\relax/white!90!violet/{1,3}/coulCf,%
+			99/Es/Einsteinium/{252}/24/-5/[Rn]/7s^{2}/\relax/5f^{11}/\relax/white!90!violet/{1,3}/coulEs,%
+			100/Fm/Fermium/{257}/26/-5/[Rn]/7s^{2}/\relax/5f^{12}/\relax/white!90!violet/{1,3}/coulFm,%
+			101/Md/Mendélévium/{258}/28/-5/[Rn]/7s^{2}/\relax/5f^{13}/\relax/white!90!violet/{1,3}/coulMd,%
+			102/No/Nobélium/{259}/30/-5/[Rn]/7s^{2}/\relax/5f^{14}/\relax/white!90!violet/{1,3}/coulNo,%
+			103/Lw/Lawrencium/{262}/32/-5/[Rn]/7s^{2}/\relax/5f^{14}/7p^{1}/white!90!violet/{\relax}/coulLr,%
+			% fin insertion actinides
+			104/Rf/Rutherfordium/{265}/6/0/[Rn]/7s^{2}/6d^{2}/5f^{14}/\relax/white/{\relax}/coulRf,%
+			105/Db/Dubnium/{268}/8/0/[Rn]/7s^{2}/6d^{3}/5f^{14}/\relax/white/{\relax}/coulDb,%
+			106/Sg/Seaborgium/{271}/10/0/[Rn]/7s^{2}/6d^{4}/5f^{14}/\relax/white/{\relax}/coulSg,%
+			107/Bh/Bohrium/{272}/12/0/[Rn]/7s^{2}/6d^{5}/5f^{14}/\relax/white/{\relax}/coulBh,%
+			108/Hs/Hassium/{270}/14/0/[Rn]/7s^{2}/6d^{6}/5f^{14}/\relax/white/{\relax}/coulHs,%
+			109/Mt/Meitnérium/{276}/16/0/[Rn]/7s^{2}/6d^{7}/5f^{14}/\relax/white/{\relax}/coulMt,%
+			110/Ds/Darmstadtium/{281}/18/0/[Rn]/7s^{2}/6d^{8}/5f^{14}/\relax/white/{\relax}/coulDs,%
+			111/Rg/Roentgenium/{280}/20/0/[Rn]/7s^{2}/6d^{9}/5f^{14}/\relax/white/{\relax}/coulRg,%
+			112/Cn/Copernicium/{285}/22/0/[Rn]/7s^{2}/6d^{10}/5f^{14}/\relax/white!80!orange/{\relax}/coulCn,%
+			113/Nh/Nihonium/{284}/24/0/[Rn]/7s^{2}/6d^{10}/5f^{14}/7p^{1}/white/{\relax}/coulNh,%
+			114/Fl/Flévorium/{289}/26/0/[Rn]/7s^{2}/6d^{10}/5f^{14}/7p^{2}/white/{\relax}/coulFl,%
+			115/Mc/Moscovium/{288}/28/0/[Rn]/7s^{2}/6d^{10}/5f^{14}/7p^{3}/white/{\relax}/coulMc,%
+			116/Lv/Livervorium/{293}/30/0/[Rn]/7s^{2}/6d^{10}/5f^{14}/7p^{4}/white/{\relax}/coulLv,%
+			117/Ts/Tennessine/{N/A}/32/0/[Rn]/7s^{2}/6d^{10}/5f^{14}/7p^{5}/white/{\relax}/coulTs,%
+			118/Og/Oganesson/{294}/34/0/[Rn]/5f^{14}/6d^{10}/7s^{2}/7p^{6}/white!90!black/{\relax}/coulOg%
+        }{%
+			%% Conditionnelle imbriquée : afficher couleurs familles ? sinon afficher couleurs éléments ? sinon fond vide.
+			\ifthenelse{\boolean{AfficherCouleurFamille}}{%true
+				\draw[ultra thin, white!33!black, fill=\famcoul ] (\x,\y) rectangle ++(2,2) ;
+			}{%false
+				\ifthenelse{\boolean{AfficherCouleurElement}}{%true
+					\draw[ultra thin, white!33!black, fill=\coulelement ] (\x,\y) rectangle ++(2,2) ;
+				}{%false
+					\draw[ultra thin, white!33!black] (\x,\y) rectangle ++(2,2) ;
+				}
+			} % fin gestion couleurs cases
+			
+			%% Faut-il afficher la masse molaire atomiques ? Si oui passer la variable AfficherMasseMolaire à True
+			\ifthenelse{\boolean{AfficherMasseMolaire}}{%true
+				\node at (\x+1,\y+0.25) {\scriptsize \masse} ;%
+			}{%false
+				\relax
+			}% fin de l'affichage des masses molaires atomiques
+
+			% Faut-il afficher la configuration des orbitales atomiques ? Si oui AfficherConfigOrbitales à True 
+			\ifthenelse{\boolean{AfficherConfigOrbitales}}{% true
+				\node at (\x+1.7,\y+1.5) {\tiny{$\champun$}} ;%
+				\node at (\x+1.7,\y+1.25) {\tiny{$\champdeux$}} ;%
+				\node at (\x+1.7,\y+1) {\tiny{$\champtrois$}} ;%
+				\node at (\x+1.7,\y+0.75) {\tiny{$\champquatre$}} ;%
+				\node at (\x+1.7,\y+0.5) {\tiny{$\champcinq$}} ;%
+			}{% false
+				\relax%
+			} % fin de l'affichage des orbitales atomiques
+
+			% Faut-il afficher la valeur de l'électronégativité selon l'échelle de Pauling ?
+			\ifthenelse{\boolean{AfficherElectronegativite}}{% true
+				\node[right] at (\x+0.05,\y+1.5) {\tiny{$\elecnegpauling$}} ;%
+			}{% false
+				\relax%
+			} % fin de l'affichage des électronégativités.
+
+			%% Ces informations s'affichent tout le temps
+			\node at (\x+0.75,\y+1) {\large ${}_{\z}\rm{\symb}$} ;%
+			\node at (\x+1,\y+1.75) {\tiny \nom} ;%
+        };%
+		% On quitte la boucle de dessin des cases élémentaires avec les options sélectionnées.
+
+		%% Ces informations s'affichent aussi tout le temps
+			% Ajout des indications de familles lanthanides et actinides
+	        \node at (3,-2) {Famille des lanthanides $\rightarrow$} ;%
+        		\node at (3,-4) {Famille des actinides $\rightarrow$} ;%
+
+			% ajout d'une grosse case exemple avec un élément chimique factice et les légendes
+			\draw (11,9) rectangle ++(4,4) ;%
+			\node at (13,11) {{\Huge X}} ;%
+			\node at (12.5,10.5) {Z} ;%
+			\draw[->] (8.75,10.25) node[left] {Nombre de protons} -- ++(3.5,0.25) ;%
+			\node at (13,12.5) {Nom élément} ;%
+			\draw[<-] (14.5,12.5) -- ++(3.5,0) node[right] {Élément} ;% 
+			\draw[->] (8,11) node[left] {Symbole} -- ++(4.5,0) ;%
+
+			% Si affichage électronégativité, afficher la légende 
+			\ifthenelse{\boolean{AfficherElectronegativite}}{%
+				\node[right] at (11.1,12) {8,88} ;%
+				\draw[->] (8,12) node[left] {Électronégativité} -- ++(3.15,0) ;%
+			}{%
+				\relax
+			}
+
+			% Si affichage masses molaires, afficher la légende
+			\ifthenelse{\boolean{AfficherMasseMolaire}}{%true
+				\node at (13,9.5) {888,88} ;%
+				\draw[->] (9.5,9.5) node[left] {Masse molaire (g/mol)} -- ++(2.5,0) ;% 
+			}{%false
+				\relax
+			}
+
+			% Si affichage de la configuration des orbitales atomiques, afficher la légende 
+			\ifthenelse{\boolean{AfficherConfigOrbitales}}{% true
+				\node at (14.5,12) {[Y]} ;%
+				\node at (14.5,11.5) {$a s^{i}$} ;%
+				\node at (14.5,11) {$b p^{j}$} ;%
+				\node at (14.5,10.5) {$n d^{k}$} ;%
+				\node at (14.5,10) {$m f^{l}$} ;%
+				\draw[<-] (15.1,11) -- ++(2,0) node[right] {Structure électronique} ;%
+				\node[right] at (17,10.5) {[Y] désigne la structure} ;%
+				\node[right] at (17,10) {du gaz noble antérieur.} ;%
+			}{% false
+				\relax
+			}
+
+			% Ajout des détails des colonnes
+			\node[right] at (4,-6) {Famille I : Colonne des alcalins} ;%
+			\node[right] at (4,-6.5) {Famille II : Colonne des alcalinoterreux} ;%
+			\node[right] at (4,-7) {Famille XI : Colonne des métaux nobles} ;%
+			\node[right] at (4,-7.5) {Famille XVII : Colonne des halogènes} ;%
+			\node[right] at (4,-8) {Famille XVIII : Colonne des gaz nobles} ;%
+			\node[right] at (4,-8.5) {Famille III à XII : Colonnes des métaux de transition} ;%
+    \end{tikzpicture}
+\end{figure}
+\end{document}
