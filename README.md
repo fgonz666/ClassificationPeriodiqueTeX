@@ -6,6 +6,7 @@ Cette classification reprend la normalisation des symboles avec le placement de 
 
 * la configuration électronique peut être affichée par l'activation de `False` à `True` d'une variable associée,
 * la masse molaire atomique peut être affichée par l'activation de `False` à `True` d'une variable associée,
+* l'électronégativité - échelle de Pauling - par l'activation d'une variable correspondante `False` &rightarrow; `True`,
 * la coloration par famille d'éléments chimiques ou par élément suivant la norme de l'UICPA peut être aussi activée par le passage de `False` à `True` de deux variables associées,
 
 Les divers éléments sont rassemblés dans un tableau de 118 lignes avec les informations nominatives, numériques et de placement.
